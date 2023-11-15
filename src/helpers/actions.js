@@ -1,3 +1,5 @@
+import { errorSnackBar } from "../components/snackbars";
+
 export const logIn = (loginCredentials) => {
   fetch("http://localhost:3030/auth/login", {
     method: "POST",
@@ -30,6 +32,7 @@ export const registerUser = (loginCredentials) => {
   })
     .then(async (res) => {
       if (res.ok) {
+        console.log(loginCredentials);
         return res.json();
       }
       errorSnackBar(await res.json());

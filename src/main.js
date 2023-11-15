@@ -11,14 +11,23 @@ const routes = [
   {
     path: "/",
     component: Login,
+    meta: {
+      isAuth: false,
+    },
   },
   {
     path: "/register",
     component: Register,
+    meta: {
+      isAuth: false,
+    },
   },
   {
     path: "/home",
     component: Home,
+    meta: {
+      isAuth: true,
+    },
   },
   {
     path: "/:catchAll(.*)",
@@ -29,6 +38,16 @@ const routes = [
 const router = createRouter({
   history: createWebHistory(),
   routes,
+});
+
+router.beforeEach((to, from, next) => {
+  if (to.matched.some((record) => record.meta.isAuth)) {
+    let user = localStorage.getItem("jwt");
+    if (!user) {
+      next("/");
+    }
+  }
+  next();
 });
 
 createApp(App).use(router).mount("#app");

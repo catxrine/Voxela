@@ -3,7 +3,7 @@ export default {
   content: ["./index.html", "./src/**/*.{vue,js}"],
   theme: {
     screens: {
-      sm: "640px",
+      sm: "767px",
       // => @media (min-width: 640px) { ... }
 
       md: "768px",

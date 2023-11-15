@@ -1,79 +1,64 @@
 <script>
-export default {};
+import FormInput from "../components/FormInput.vue";
+import { logIn } from "../helpers/actions";
+
+export default {
+  data() {
+    return {
+      email: "",
+      password: "",
+    };
+  },
+  methods: {
+    logIn,
+  },
+  components: { FormInput },
+};
 </script>
 
 <template>
   <div
-    class="min-h-screen flex flex-col items-center justify-center bg-gray-100"
+    class="min-h-screen px-4 flex flex-col items-center justify-center sm:bg-gray-100 bg-gray-50"
   >
     <div
-      class="flex flex-col border-t-8 border-gray-800 bg-white shadow-md px-4 sm:px-6 md:px-8 lg:px-10 py-8 rounded-xl w-50 w-md"
+      class="sm:flex sm:flex-col sm:border-t-8 sm:border-gray-800 sm:bg-white sm:shadow-md px-4 sm:px-6 md:px-8 lg:px-10 py-8 sm:rounded-xl sm:w-50 sm:w-md w-full max-w-[400px]"
     >
-      <div
-        class="mb-1 font-medium self-center text-xl sm:text-3xl text-gray-800"
-      >
-        Welcome to Voxela
-      </div>
+      <div class="title-big">Welcome to Voxela</div>
       <hr />
-      <div class="mt-1 self-center text-xl sm:text-sm text-gray-800">
+      <div
+        class="mt-1 text-center gabarito text-[16px] sm:text-sm text-gray-800"
+      >
         Share your thoughts and stories with us!
       </div>
 
-      <div class="mt-10">
-        <form action="#">
-          <div class="flex flex-col mb-5">
-            <label for="email" class="mb-1 text-xs tracking-wide text-gray-600"
-              >E-Mail Address:</label
-            >
-            <div class="relative">
-              <div
-                class="inline-flex items-center justify-center absolute left-0 top-0 h-full w-10 text-gray-400"
-              >
-                <i class="fas fa-at text-gray-800"></i>
-              </div>
+      <div class="mt-8">
+        <form
+          @submit="
+            ($event) => {
+              $event.preventDefault();
+              logIn({ email, password });
+            }
+          "
+        >
+          <FormInput icon="fas fa-at" label="E-Mail Address">
+            <input
+              type="text"
+              class="input-primary"
+              placeholder="Email"
+              v-model="email"
+          /></FormInput>
 
-              <input
-                id="email"
-                type="email"
-                name="email"
-                class="text-sm placeholder-gray-500 pl-10 pr-4 rounded-2xl border border-gray-400 w-full py-2 focus:outline-none focus:border-blue-400"
-                placeholder="Enter your email"
-              />
-            </div>
-          </div>
-          <div class="flex flex-col mb-6">
-            <label
-              for="password"
-              class="mb-1 text-xs sm:text-sm tracking-wide text-gray-600"
-              >Password:</label
-            >
-            <div class="relative">
-              <div
-                class="inline-flex items-center justify-center absolute left-0 top-0 h-full w-10 text-gray-400"
-              >
-                <span>
-                  <i class="fas fa-lock text-gray-800"></i>
-                </span>
-              </div>
+          <FormInput icon="fas fa-lock" label="Password">
+            <input
+              type="password"
+              class="input-primary"
+              placeholder="●●●●●●●●●"
+              v-model="password"
+          /></FormInput>
 
-              <input
-                id="password"
-                type="password"
-                name="password"
-                class="text-sm placeholder-gray-500 pl-10 pr-4 rounded-2xl border border-gray-400 w-full py-2 focus:outline-none focus:border-blue-400"
-                placeholder="●●●●●●●●●"
-              />
-            </div>
-          </div>
-
-          <div class="flex w-full">
-            <button
-              type="submit"
-              class="flex mt-2 items-center justify-center focus:outline-none text-white text-sm sm:text-base bg-gray-800 hover:bg-gray-700 rounded-2xl py-2 w-full transition duration-150 ease-in"
-            >
-              <span class="mr-2 uppercase">Register</span>
-            </button>
-          </div>
+          <button type="submit" class="btn-primary">
+            <span class="mr-2 uppercase">Login</span>
+          </button>
         </form>
       </div>
     </div>
