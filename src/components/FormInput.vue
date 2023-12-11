@@ -1,8 +1,6 @@
 <script>
 export default {
   props: ["label", "icon"],
-
-  components: {},
 };
 </script>
 
