@@ -1,18 +1,40 @@
 <script>
-import { publicPost } from "../helpers/actions/actions";
-import { useRoute } from "vue-router";
-import Layout from "../components/Layout.vue";
+import { fetchData } from "../helpers/fetchData";
+import Post from "../components/Post.vue";
+
 export default {
   data() {
     return {
-      description: "",
+      posts: "",
     };
   },
-  components: { Layout },
+
   methods: {
-    publicPost,
+    getAllPosts() {
+      fetchData({
+        url: `/post/all`,
+        method: "GET",
+        auth: localStorage.getItem("jwt"),
+      }).then((data) => {
+        this.posts = data;
+      });
+    },
   },
+  async mounted() {
+    this.getAllPosts();
+  },
+  components: { Post },
 };
 </script>
 
-<template></template>
+<template>
+  <div class="mt-10" @click="console.log(posts)" v-for="(value, name) in posts">
+    <Post
+      :author="value.author"
+      :description="value.description"
+      :date="value.createdAt"
+      :_id="value._id"
+      :username="value.username"
+    />
+  </div>
+</template>

@@ -1,6 +1,6 @@
 <script>
 export default {
-  props: ["label", "icon"],
+  props: ["label", "icon", "error"],
 };
 </script>
 
@@ -14,6 +14,9 @@ export default {
         <i :class="icon" class="text-gray-800"></i>
       </div>
       <slot></slot>
+    </div>
+    <div class="input-errors" v-for="error of error" :key="error.$uid">
+      {{ error.$message }}
     </div>
   </div>
 </template>

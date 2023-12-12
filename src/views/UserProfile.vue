@@ -1,8 +1,10 @@
 <script>
 import { mapState, mapActions } from "pinia";
 import { useUserStore } from "../store/userStore";
+import { fetchData } from "../helpers/fetchData";
 import { getCurrentUserId } from "../helpers/utils";
-
+import PostSkeleton from "../components/Skeleton/PostSkeleton.vue";
+import PostInput from "../components/PostInput.vue";
 import { publicPost, addUser, removeUser } from "../helpers/actions/actions";
 
 import Post from "../components/Post.vue";
@@ -19,25 +21,30 @@ export default {
     return {
       userId: this.$route.params.id || getCurrentUserId(),
       postData: null,
+      currentUser: null,
     };
   },
 
   methods: {
-    async checkIfFollowed() {
-      return !!this.profile?.followed?.find((el) => el.follows === this.userId);
-    },
     getCurrentUserId,
     removeUser,
     addUser,
-
+    publicPost,
     ...mapActions(useUserStore, ["setProfile"]),
   },
 
   mounted() {
     this.setProfile(this.userId);
+    fetchData({
+      url: `/user/${this.getCurrentUserId()}`,
+      method: "GET",
+      auth: localStorage.getItem("jwt"),
+    }).then((data) => {
+      this.currentUser = data;
+    });
   },
 
-  components: { MiniCard, Tag, Icon, Post },
+  components: { MiniCard, Tag, Icon, Post, PostSkeleton, PostInput },
 
   watch: {
     $route(to, from) {
@@ -56,7 +63,6 @@ export default {
         <img
           class="w-40 h-40 object-cover"
           src="https://icons.iconarchive.com/icons/diversity-avatars/avatars/256/charlie-chaplin-icon.png"
-          alt="User"
         />
       </div>
 
@@ -66,9 +72,9 @@ export default {
         </div>
 
         <div class="my-2 flex flex-row space-x-2">
-          <Tag title="Science" />
-          <Tag title="CS" />
-          <Tag title="Anon" />
+          <div v-for="value in profile?.tags">
+            <Tag :title="value" />
+          </div>
         </div>
 
         <div class="mt-2 flex flex-row items-center space-x-5">
@@ -93,16 +99,24 @@ export default {
       <div class="w-100 flex flex-grow flex-col items-end justify-start">
         <div class="flex flex-row space-x-3">
           <span
-            @click="() => addUser(userId)"
-            v-if="!checkIfFollowed() && this.userId !== getCurrentUserId()"
+            @click="() => addUser(userId).then(() => setProfile(userId))"
+            v-if="
+              !this.currentUser?.followed?.find(
+                (el) => el.follows === this.userId
+              ) && this.userId !== getCurrentUserId()
+            "
             class="material-symbols-outlined flex rounded-md cursor-pointer bg-gray-100 py-2 text-gray-500 px-2 transition-all duration-150 ease-in-out hover:bg-gray-200"
           >
             person_add
           </span>
 
           <span
-            @click="() => removeUser(userId)"
-            v-else-if="checkIfFollowed() && this.userId !== getCurrentUserId()"
+            @click="() => removeUser(userId).then(() => setProfile(userId))"
+            v-else-if="
+              this.currentUser?.followed?.find(
+                (el) => el.follows === this.userId
+              ) && this.userId !== getCurrentUserId()
+            "
             class="material-symbols-outlined flex bg-green-100 text-green-700 rounded-md cursor-pointer py-2 px-2 transition-all duration-150 ease-in-out hover:bg-gray-200"
           >
             how_to_reg
@@ -116,31 +130,38 @@ export default {
     </div>
   </div>
   <div class="flex flex-col w-full justify-center m-auto">
-    <div
-      v-if="this.userId === getCurrentUserId()"
-      class="flex flex-row justify-center mt-10"
-    >
-      <div
-        class="flex w-[30vw] items-center justify-center shadow-sm bg-gray-100 p-4 rounded-l-md"
+    <div v-if="this.userId === getCurrentUserId()">
+      <PostInput
+        :action="
+          () => {
+            publicPost({
+              description: postData.trim(),
+              username: profile?.username,
+            }).then(() => setProfile(userId));
+          }
+        "
       >
-        <span class="text-green-600 font-semibold">&gt;</span>
         <input
           v-model="postData"
           class="bg-gray-100 p-0.5 placeholder:text-gray-500 outline-none ml-2 w-full"
           placeholder="Share your thoughs"
         />
-      </div>
-      <button
-        @click="() => publicPost({ description: postData.trim() })"
-        class="rounded-r-md py-2 text-gray-100 hover:text-gray-700 font-semibold px-2 transition-all duration-300 ease-in-out bg-gray-600 hover:bg-gray-300"
-      >
-        POST
-      </button>
+      </PostInput>
     </div>
-    <div class="mt-10 px-5 pt-5 h-[52vh] overflow-y-auto">
-      <div v-for="(value, name) in profile?.posts">
+
+    <div
+      class="flex flex-col mt-10 m-auto justify-center"
+      v-if="profile?.posts.length === 0"
+    >
+      <h1 class="text-[18px] text-center font-semibold pb-5">No posts yet!</h1>
+      <PostSkeleton />
+      <PostSkeleton />
+    </div>
+    <div v-else class="mt-14">
+      <div v-for="(value, name) in profile?.posts" :key="value._id">
         <Post
-          :author="this.profile?.username"
+          :username="value.username"
+          :author="value.author"
           :description="value.description"
           :date="value.createdAt"
           :_id="value._id"

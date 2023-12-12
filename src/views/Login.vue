@@ -2,13 +2,24 @@
 import FormInput from "../components/FormInput.vue";
 import { logIn } from "../helpers/actions/auth";
 import { APP_SLOGAN } from "../constants/constants.js";
+import { useVuelidate } from "@vuelidate/core";
+import { required, email, minLength, maxLength } from "@vuelidate/validators";
 
 export default {
+  setup() {
+    return { v$: useVuelidate() };
+  },
   data() {
     return {
       email: "",
       password: "",
       slogan: APP_SLOGAN,
+    };
+  },
+  validations() {
+    return {
+      email: { required },
+      password: { required, minLength: minLength(6), maxLength: maxLength(16) },
     };
   },
   methods: {
@@ -34,10 +45,20 @@ export default {
       </div>
 
       <div class="mt-8">
-        <form @submit.prevent="() => logIn({ email, password })">
-          <FormInput icon="fas fa-at" label="E-Mail Address">
+        <form
+          @submit.prevent="
+            async () => {
+              const validate = await this.v$.$validate();
+              validate && logIn({ email, password });
+            }
+          "
+        >
+          <FormInput
+            icon="fas fa-at"
+            :error="v$.email.$errors"
+            label="E-Mail Address"
+          >
             <input
-              required
               type="text"
               class="input-primary"
               placeholder="Email"
@@ -45,9 +66,12 @@ export default {
             />
           </FormInput>
 
-          <FormInput icon="fas fa-lock" label="Password">
+          <FormInput
+            :error="v$.password.$errors"
+            icon="fas fa-lock"
+            label="Password"
+          >
             <input
-              required
               type="password"
               class="input-primary"
               placeholder="●●●●●●●●●"

@@ -2,14 +2,26 @@
 import FormInput from "../components/FormInput.vue";
 import { registerUser } from "../helpers/actions/auth";
 import { APP_SLOGAN } from "../constants/constants";
+import { useVuelidate } from "@vuelidate/core";
+import { required, email, minLength, maxLength } from "@vuelidate/validators";
 
 export default {
+  setup() {
+    return { v$: useVuelidate() };
+  },
   data() {
     return {
       username: "",
       email: "",
       password: "",
       slogan: APP_SLOGAN,
+    };
+  },
+  validations() {
+    return {
+      username: { required, minLength: minLength(3), maxLength: maxLength(10) },
+      email: { required },
+      password: { required, minLength: minLength(6), maxLength: maxLength(16) },
     };
   },
   methods: {
@@ -35,41 +47,53 @@ export default {
       <div class="mt-8">
         <form
           @submit.prevent="
-            registerUser({
-              username: username,
-              email: email,
-              password: password,
-            })
+            async () => {
+              const validate = await this.v$.$validate();
+              validate &&
+                registerUser({
+                  username: username,
+                  email: email,
+                  password: password,
+                });
+            }
           "
         >
-          <FormInput icon="fas fa-user" label="Username">
+          <FormInput
+            icon="fas fa-user"
+            :error="v$.username.$errors"
+            label="Username"
+          >
             <input
-              required
               type="text"
               class="input-primary"
               placeholder="Enter your username"
               v-model="username"
             />
           </FormInput>
-          <FormInput icon="fas fa-at" label="E-Mail Address">
+          <FormInput
+            icon="fas fa-at"
+            :error="v$.email.$errors"
+            label="E-Mail Address"
+          >
             <input
-              required
               type="text"
               class="input-primary"
               placeholder="Email"
               v-model="email"
             />
           </FormInput>
-          <FormInput icon="fas fa-lock" label="Password">
+          <FormInput
+            icon="fas fa-lock"
+            :error="v$.password.$errors"
+            label="Password"
+          >
             <input
-              required
               type="password"
               class="input-primary"
               placeholder="●●●●●●●●●"
               v-model="password"
             />
           </FormInput>
-
           <button type="submit" class="btn-primary">Register</button>
         </form>
       </div>

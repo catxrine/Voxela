@@ -21,6 +21,7 @@ export const registerUser = (loginCredentials) => {
     window.location.pathname = "/profile";
   });
 };
+
 export const publicPost = (data) => {
   fetchData({
     url: "/post",
@@ -28,4 +29,8 @@ export const publicPost = (data) => {
     method: "POST",
     body: { description: data.description },
   });
+};
+
+export const logOut = () => {
+  localStorage.removeItem("jwt");
 };

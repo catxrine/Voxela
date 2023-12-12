@@ -5,6 +5,7 @@ import Home from "../views/Home.vue";
 import ErrorPage from "../views/ErrorPage.vue";
 import Layout from "../components/Layout.vue";
 import UserProfile from "../views/UserProfile.vue";
+import Settings from "../views/Settings.vue";
 
 const routes = [
   {
@@ -28,6 +29,10 @@ const routes = [
       {
         path: "home",
         component: Home,
+      },
+      {
+        path: "settings",
+        component: Settings,
       },
       {
         path: "profile/:id?",

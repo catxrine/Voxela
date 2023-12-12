@@ -1,7 +1,5 @@
 import { defineStore } from "pinia";
-import { getCurrentUserId } from "./../helpers/utils";
 import { fetchData } from "../helpers/fetchData";
-import { useRoute } from "vue-router";
 
 export const useUserStore = defineStore("user", {
   state: () => {
@@ -17,7 +15,6 @@ export const useUserStore = defineStore("user", {
         auth: localStorage.getItem("jwt"),
       }).then((data) => {
         this.profile = data;
-        this.profile.posts = this.profile.posts.reverse();
       });
     },
   },
