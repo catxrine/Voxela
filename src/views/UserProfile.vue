@@ -122,10 +122,6 @@ export default {
           >
             how_to_reg
           </span>
-          <Icon
-            icon="more_vert"
-            :style="`flex rounded-md bg-gray-100 py-2 px-1 text-gray-500 transition-all duration-150 ease-in-out hover:bg-gray-200`"
-          />
         </div>
       </div>
     </div>

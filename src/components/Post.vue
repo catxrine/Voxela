@@ -43,11 +43,13 @@ export default {
         />
         <div class="flex flex-col w-full">
           <div class="flex flex-row justify-between">
-            <p
-              class="relative text-xl whitespace-nowrap truncate overflow-hidden"
-            >
-              {{ username }}
-            </p>
+            <router-link :to="`profile/${author}`">
+              <p
+                class="relative text-xl whitespace-nowrap truncate overflow-hidden"
+              >
+                {{ username }}
+              </p>
+            </router-link>
             <div
               v-if="author === getCurrentUserId()"
               class="inline-flex items-center rounded-md shadow-sm"
