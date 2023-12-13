@@ -7,7 +7,7 @@ import { useUserStore } from "../store/userStore";
 import { getCurrentUserId } from "../helpers/utils";
 
 export default {
-  props: ["author", "description", "date", "_id", "username"],
+  props: ["author", "description", "date", "_id", "username", "refetch"],
 
   data() {
     return {
@@ -65,9 +65,10 @@ export default {
               <button
                 @click="
                   () => {
-                    deletePost(this._id).then(() =>
-                      setViewedProfile(getCurrentUserId())
-                    );
+                    deletePost(this._id).then(() => {
+                      setViewedProfile(getCurrentUserId());
+                      refetch && refetch();
+                    });
                     newDescription = null;
                   }
                 "
