@@ -1,6 +1,6 @@
 <script>
 import Icon from "./Icon.vue";
-import { deletePost } from "../helpers/actions/actions";
+import { deletePost } from "../helpers/actions/postActions";
 
 export default {
   props: ["_id"],

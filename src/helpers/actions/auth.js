@@ -22,15 +22,6 @@ export const registerUser = (loginCredentials) => {
   });
 };
 
-export const publicPost = (data) => {
-  fetchData({
-    url: "/post",
-    auth: localStorage.getItem("jwt"),
-    method: "POST",
-    body: { description: data.description },
-  });
-};
-
 export const logOut = () => {
   localStorage.removeItem("jwt");
 };

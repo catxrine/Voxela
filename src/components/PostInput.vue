@@ -7,7 +7,7 @@ export default {
 <template>
   <div class="flex flex-row justify-center mt-10">
     <div
-      class="flex w-[30vw] items-center justify-center shadow-sm bg-gray-100 p-4 rounded-l-md"
+      class="flex w-[400px] min-w-[200px] items-center justify-center shadow-sm bg-gray-100 p-4 rounded-l-md"
     >
       <span class="text-green-600 font-semibold">&gt;</span>
       <slot></slot>

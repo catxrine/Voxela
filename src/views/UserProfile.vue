@@ -1,18 +1,21 @@
 <script>
 import { mapState, mapActions } from "pinia";
 import { useUserStore } from "../store/userStore";
-import { fetchData } from "../helpers/fetchData";
 import { getCurrentUserId } from "../helpers/utils";
-import PostSkeleton from "../components/Skeleton/PostSkeleton.vue";
 import PostInput from "../components/PostInput.vue";
-import { publicPost, addUser, removeUser } from "../helpers/actions/actions";
+import { fetchData } from "../helpers/fetchData";
+import { addUser, removeUser } from "../helpers/actions/userActions";
+import { publicPost } from "../helpers/actions/postActions";
 
+import NoPosts from "../components/NoPosts.vue";
 import Post from "../components/Post.vue";
 import MiniCard from "../components/MiniCard.vue";
 import Tag from "../components/Tag.vue";
 import Icon from "../components/Icon.vue";
 
 export default {
+  components: { MiniCard, Tag, Icon, Post, PostInput, NoPosts },
+
   computed: {
     ...mapState(useUserStore, ["profile"]),
   },
@@ -30,21 +33,25 @@ export default {
     removeUser,
     addUser,
     publicPost,
+    getCurrentUserData() {
+      fetchData({
+        url: `/user/${this.getCurrentUserId()}`,
+        method: "GET",
+        auth: localStorage.getItem("jwt"),
+      }).then((data) => (this.currentUser = data));
+    },
+    followed() {
+      return this.currentUser?.followed?.find(
+        (el) => el.follows === this.userId
+      );
+    },
     ...mapActions(useUserStore, ["setProfile"]),
   },
 
   mounted() {
     this.setProfile(this.userId);
-    fetchData({
-      url: `/user/${this.getCurrentUserId()}`,
-      method: "GET",
-      auth: localStorage.getItem("jwt"),
-    }).then((data) => {
-      this.currentUser = data;
-    });
+    this.getCurrentUserData();
   },
-
-  components: { MiniCard, Tag, Icon, Post, PostSkeleton, PostInput },
 
   watch: {
     $route(to, from) {
@@ -57,11 +64,11 @@ export default {
 <template>
   <div class="grid">
     <div
-      class="flex flex-row rounded-lg border border-gray-200/80 bg-white p-6"
+      class="flex flex-row rounded-lg border border-gray-200/80 bg-white p-6 h-full"
     >
       <div class="relative">
         <img
-          class="w-40 h-40 object-cover"
+          class="inline-block h-48 w-48 bg-cover bg-center"
           src="https://icons.iconarchive.com/icons/diversity-avatars/avatars/256/charlie-chaplin-icon.png"
         />
       </div>
@@ -99,25 +106,28 @@ export default {
       <div class="w-100 flex flex-grow flex-col items-end justify-start">
         <div class="flex flex-row space-x-3">
           <span
-            @click="() => addUser(userId).then(() => setProfile(userId))"
-            v-if="
-              !this.currentUser?.followed?.find(
-                (el) => el.follows === this.userId
-              ) && this.userId !== getCurrentUserId()
+            @click="
+              () =>
+                addUser(userId).then(() => {
+                  getCurrentUserData();
+                  setProfile(userId);
+                })
             "
-            class="material-symbols-outlined flex rounded-md cursor-pointer bg-gray-100 py-2 text-gray-500 px-2 transition-all duration-150 ease-in-out hover:bg-gray-200"
+            v-if="!followed() && this.userId !== getCurrentUserId()"
+            class="material-symbols-outlined not-followed"
           >
             person_add
           </span>
-
           <span
-            @click="() => removeUser(userId).then(() => setProfile(userId))"
-            v-else-if="
-              this.currentUser?.followed?.find(
-                (el) => el.follows === this.userId
-              ) && this.userId !== getCurrentUserId()
+            @click="
+              () =>
+                removeUser(userId).then(() => {
+                  getCurrentUserData();
+                  setProfile(userId);
+                })
             "
-            class="material-symbols-outlined flex bg-green-100 text-green-700 rounded-md cursor-pointer py-2 px-2 transition-all duration-150 ease-in-out hover:bg-gray-200"
+            v-else-if="followed() && this.userId !== getCurrentUserId()"
+            class="material-symbols-outlined followed"
           >
             how_to_reg
           </span>
@@ -133,32 +143,24 @@ export default {
     <div v-if="this.userId === getCurrentUserId()">
       <PostInput
         :action="
-          () => {
+          () =>
             publicPost({
               description: postData.trim(),
               username: profile?.username,
-            }).then(() => setProfile(userId));
-          }
+            }).then(() => setProfile(userId))
         "
       >
         <input
           v-model="postData"
-          class="bg-gray-100 p-0.5 placeholder:text-gray-500 outline-none ml-2 w-full"
+          class="input-secondary"
           placeholder="Share your thoughs"
         />
       </PostInput>
     </div>
 
-    <div
-      class="flex flex-col mt-10 m-auto justify-center"
-      v-if="profile?.posts.length === 0"
-    >
-      <h1 class="text-[18px] text-center font-semibold pb-5">No posts yet!</h1>
-      <PostSkeleton />
-      <PostSkeleton />
-    </div>
+    <div class="flex" v-if="profile?.posts.length < 1"><NoPosts /></div>
     <div v-else class="mt-14">
-      <div v-for="(value, name) in profile?.posts" :key="value._id">
+      <div v-for="value in profile?.posts" :key="value._id">
         <Post
           :username="value.username"
           :author="value.author"

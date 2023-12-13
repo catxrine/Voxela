@@ -1,6 +1,6 @@
 <script>
 import Icon from "./Icon.vue";
-import { deleteTag } from "../helpers/actions/actions";
+import { deleteTag } from "../helpers/actions/tagActions";
 export default {
   props: ["title"],
   methods: {

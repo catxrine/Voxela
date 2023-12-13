@@ -17,7 +17,7 @@ export default {
         <div className="overflow-x-auto border-r-2 border-base-subtle">
           <Followers />
         </div>
-        <div className="row-span-2 overflow-x-auto">
+        <div className="row-span-2 h-full overflow-x-auto">
           <router-view />
         </div>
       </div>

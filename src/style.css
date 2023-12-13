@@ -44,6 +44,18 @@
   .input-errors {
     @apply text-red-700 p-0 m-0;
   }
+  .label {
+    @apply block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2;
+  }
+  .input-secondary {
+    @apply bg-gray-100 p-0.5 placeholder:text-gray-500 outline-none ml-2 w-full;
+  }
+  .not-followed {
+    @apply flex rounded-md cursor-pointer bg-gray-100 py-2 text-gray-500 px-2 transition-all duration-150 ease-in-out hover:bg-gray-200;
+  }
+  .followed {
+    @apply flex bg-green-100 text-green-700 rounded-md cursor-pointer py-2 px-2 transition-all duration-150 ease-in-out hover:bg-gray-200;
+  }
 }
 * {
   scrollbar-width: thin;

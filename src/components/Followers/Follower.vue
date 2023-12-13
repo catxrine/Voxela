@@ -1,12 +1,6 @@
 <script>
-import { addUser, removeUser } from "../../helpers/actions/actions";
 export default {
-  props: ["username", "to", "followsBack"],
-
-  methods: {
-    addUser,
-    removeUser,
-  },
+  props: ["username", "to", "followsBack", "remove", "add"],
 };
 </script>
 <template>
@@ -25,9 +19,9 @@ export default {
         <div class="leading-snug text-xs text-gray-600">@{{ username }}</div>
       </div>
     </router-link>
-    <button v-if="followsBack" @click="removeUser(to)" class="tag-tertiary">
+    <button v-if="followsBack" @click="remove" class="tag-tertiary">
       Followed
     </button>
-    <button v-else @click="addUser(to)" class="tag-secondary">Follow</button>
+    <button v-else @click="add" class="tag-secondary">Follow</button>
   </div>
 </template>

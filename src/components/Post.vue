@@ -1,13 +1,14 @@
 <script>
 import Icon from "./Icon.vue";
 import Dropdown from "./Dropdown.vue";
-import { deletePost, editPost } from "../helpers/actions/actions";
+import { deletePost, editPost } from "../helpers/actions/postActions";
 import { mapState, mapActions } from "pinia";
 import { useUserStore } from "../store/userStore";
 import { getCurrentUserId } from "../helpers/utils";
 
 export default {
   props: ["author", "description", "date", "_id", "username"],
+
   data() {
     return {
       showDropdown: false,
@@ -18,31 +19,27 @@ export default {
   computed: {
     ...mapState(useUserStore, ["profile"]),
   },
-  components: { Icon, Dropdown },
   methods: {
     toggleDropDown() {
-      !this.showDropdown
-        ? (this.showDropdown = true)
-        : (this.showDropdown = false);
+      this.showDropdown = !this.showDropdown;
     },
     deletePost,
     editPost,
     getCurrentUserId,
     ...mapActions(useUserStore, ["setProfile"]),
   },
+  components: { Icon, Dropdown },
 };
 </script>
 <template>
   <div class="flex justify-center relative w-full">
     <div
-      class="relative w-[600px] grid grid-cols-1 gap-4 p-4 mb-8 border rounded-lg bg-white shadow-lg"
+      class="relative w-[600px] min-w-[400px] grid grid-cols-1 gap-4 p-4 mb-8 border rounded-lg bg-white shadow-lg"
     >
       <div class="relative flex gap-4">
         <img
           src="https://icons.iconarchive.com/icons/diversity-avatars/avatars/256/charlie-chaplin-icon.png"
           class="relative rounded-lg -top-8 -mb-4 bg-white border h-20 w-20"
-          alt=""
-          loading="lazy"
         />
         <div class="flex flex-col w-full">
           <div class="flex flex-row justify-between">
@@ -52,12 +49,11 @@ export default {
               {{ username }}
             </p>
             <div
-              @click="console.log(author, getCurrentUserId())"
               v-if="author === getCurrentUserId()"
               class="inline-flex items-center rounded-md shadow-sm"
             >
               <button
-                @click="showEditInput = true"
+                @click="showEditInput = !showEditInput"
                 class="text-slate-800 hover:text-green-500 text-sm bg-white hover:bg-slate-100 border border-slate-200 rounded-l-lg font-medium px-4 py-2 inline-flex space-x-1 items-center"
               >
                 <Icon icon="edit_square" />
@@ -66,10 +62,12 @@ export default {
 
               <button
                 @click="
-                  () =>
+                  () => {
                     deletePost(this._id).then(() =>
                       setProfile(getCurrentUserId())
-                    )
+                    );
+                    newDescription = null;
+                  }
                 "
                 class="text-slate-800 hover:text-red-500 text-sm bg-white hover:bg-slate-100 border border-slate-200 rounded-r-lg font-medium px-4 py-2 inline-flex space-x-1 items-center"
               >
