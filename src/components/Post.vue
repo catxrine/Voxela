@@ -17,7 +17,7 @@ export default {
     };
   },
   computed: {
-    ...mapState(useUserStore, ["profile"]),
+    ...mapState(useUserStore, ["viewedProfile"]),
   },
   methods: {
     toggleDropDown() {
@@ -26,7 +26,7 @@ export default {
     deletePost,
     editPost,
     getCurrentUserId,
-    ...mapActions(useUserStore, ["setProfile"]),
+    ...mapActions(useUserStore, ["setViewedProfile"]),
   },
   components: { Icon, Dropdown },
 };
@@ -64,7 +64,7 @@ export default {
                 @click="
                   () => {
                     deletePost(this._id).then(() =>
-                      setProfile(getCurrentUserId())
+                      setViewedProfile(getCurrentUserId())
                     );
                     newDescription = null;
                   }
