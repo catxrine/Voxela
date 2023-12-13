@@ -3,7 +3,6 @@ import { mapState, mapActions } from "pinia";
 import { useUserStore } from "../store/userStore";
 import { getCurrentUserId } from "../helpers/utils";
 import PostInput from "../components/PostInput.vue";
-import { fetchData } from "../helpers/fetchData";
 import { addUser, removeUser } from "../helpers/actions/userActions";
 import { publicPost } from "../helpers/actions/postActions";
 
@@ -17,14 +16,13 @@ export default {
   components: { MiniCard, Tag, Icon, Post, PostInput, NoPosts },
 
   computed: {
-    ...mapState(useUserStore, ["profile"]),
+    ...mapState(useUserStore, ["viewedProfile", "profile"]),
   },
 
   data() {
     return {
       userId: this.$route.params.id || getCurrentUserId(),
       postData: null,
-      currentUser: null,
     };
   },
 
@@ -33,30 +31,21 @@ export default {
     removeUser,
     addUser,
     publicPost,
-    getCurrentUserData() {
-      fetchData({
-        url: `/user/${this.getCurrentUserId()}`,
-        method: "GET",
-        auth: localStorage.getItem("jwt"),
-      }).then((data) => (this.currentUser = data));
-    },
+
     followed() {
-      return this.currentUser?.followed?.find(
-        (el) => el.follows === this.userId
-      );
+      return this.profile?.followed?.find((el) => el.follows === this.userId);
     },
-    ...mapActions(useUserStore, ["setProfile"]),
+    ...mapActions(useUserStore, ["setViewedProfile", "setProfile"]),
   },
 
   mounted() {
-    this.setProfile(this.userId);
-    this.getCurrentUserData();
+    this.setViewedProfile(this.userId);
   },
 
   watch: {
     $route(to, from) {
       this.userId = this.$route.params.id || getCurrentUserId();
-      this.setProfile(this.userId);
+      this.setViewedProfile(this.userId);
     },
   },
 };
@@ -75,11 +64,13 @@ export default {
 
       <div class="flex flex-col px-6">
         <div class="flex h-8 flex-row">
-          <h2 class="text-lg font-semibold">@{{ this.profile?.username }}</h2>
+          <h2 class="text-lg font-semibold">
+            @{{ this.viewedProfile?.username }}
+          </h2>
         </div>
 
         <div class="my-2 flex flex-row space-x-2">
-          <div v-for="value in profile?.tags">
+          <div v-for="value in viewedProfile?.tags">
             <Tag :title="value" />
           </div>
         </div>
@@ -87,17 +78,17 @@ export default {
         <div class="mt-2 flex flex-row items-center space-x-5">
           <MiniCard
             title="Posts"
-            :data="this.profile?.posts?.length"
+            :data="this.viewedProfile?.posts?.length"
             icon="style"
           />
           <MiniCard
             title="Followers"
-            :data="this.profile?.followers?.length"
+            :data="this.viewedProfile?.followers?.length"
             icon="group"
           />
           <MiniCard
             title="Followed"
-            :data="this.profile?.followed?.length"
+            :data="this.viewedProfile?.followed?.length"
             icon="person_check"
           />
         </div>
@@ -109,8 +100,8 @@ export default {
             @click="
               () =>
                 addUser(userId).then(() => {
-                  getCurrentUserData();
-                  setProfile(userId);
+                  setViewedProfile(userId);
+                  setProfile(profile._id);
                 })
             "
             v-if="!followed() && this.userId !== getCurrentUserId()"
@@ -122,8 +113,8 @@ export default {
             @click="
               () =>
                 removeUser(userId).then(() => {
-                  getCurrentUserData();
-                  setProfile(userId);
+                  setViewedProfile(userId);
+                  setProfile(profile._id);
                 })
             "
             v-else-if="followed() && this.userId !== getCurrentUserId()"
@@ -146,8 +137,8 @@ export default {
           () =>
             publicPost({
               description: postData.trim(),
-              username: profile?.username,
-            }).then(() => setProfile(userId))
+              username: viewedProfile?.username,
+            }).then(() => setViewedProfile(userId))
         "
       >
         <input
@@ -158,9 +149,9 @@ export default {
       </PostInput>
     </div>
 
-    <div class="flex" v-if="profile?.posts.length < 1"><NoPosts /></div>
+    <div class="flex" v-if="viewedProfile?.posts.length < 1"><NoPosts /></div>
     <div v-else class="mt-14">
-      <div v-for="value in profile?.posts" :key="value._id">
+      <div v-for="value in viewedProfile?.posts" :key="value._id">
         <Post
           :username="value.username"
           :author="value.author"

@@ -5,6 +5,7 @@ export const useUserStore = defineStore("user", {
   state: () => {
     return {
       profile: null,
+      viewedProfile: null,
     };
   },
   actions: {
@@ -15,6 +16,15 @@ export const useUserStore = defineStore("user", {
         auth: localStorage.getItem("jwt"),
       }).then((data) => {
         this.profile = data;
+      });
+    },
+    setViewedProfile(id) {
+      fetchData({
+        url: `/user/${id}`,
+        method: "GET",
+        auth: localStorage.getItem("jwt"),
+      }).then((data) => {
+        this.viewedProfile = data;
       });
     },
   },

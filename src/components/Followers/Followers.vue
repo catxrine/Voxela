@@ -1,44 +1,35 @@
 <script>
 import { addUser, removeUser } from "../../helpers/actions/userActions";
+import { mapState, mapActions } from "pinia";
+import { useUserStore } from "../../store/userStore";
 import { getCurrentUserId } from "../../helpers/utils";
-import { fetchData } from "../../helpers/fetchData";
 import Follower from "./Follower.vue";
 import Icon from "../Icon.vue";
 
 export default {
   data() {
-    return {
-      followers: [],
-      followed: [],
-    };
+    return {};
   },
-
+  computed: {
+    ...mapState(useUserStore, ["profile", "viewedProfile"]),
+  },
   components: { Follower, Icon },
 
   methods: {
     isFollowingBack(id) {
-      return this.followed.some((el) => el.follows === id);
+      return this.profile.followed.some((el) => el.follows === id);
     },
     getCurrentUserId,
-    getCurrentUserData() {
-      fetchData({
-        url: `/user/${this.getCurrentUserId()}`,
-        method: "GET",
-        auth: localStorage.getItem("jwt"),
-      }).then((data) => {
-        this.followers = data.followers;
-        this.followed = data.followed;
-      });
-    },
     addUser,
     removeUser,
+    ...mapActions(useUserStore, ["setProfile", "setViewedProfile"]),
   },
   mounted() {
-    this.getCurrentUserData();
+    this.setProfile(this.getCurrentUserId());
   },
   watch: {
     $route(to, from) {
-      this.getCurrentUserData();
+      this.setProfile(this.getCurrentUserId());
     },
   },
 };
@@ -46,11 +37,25 @@ export default {
 <template>
   <div>
     <h2 class="font-semibold text-[18px] flex justify-center m-2">Followers</h2>
-    <div v-if="followers?.length > 0" v-for="(value, name) in followers">
+    <div
+      v-if="profile?.followers?.length > 0"
+      v-for="value in profile?.followers"
+    >
       <Follower
-        :add="() => addUser(value.followedBy).then(() => getCurrentUserData())"
+        :add="
+          () => {
+            addUser(value.followedBy).then(() => {
+              setProfile(getCurrentUserId());
+              setViewedProfile(viewedProfile._id);
+            });
+          }
+        "
         :remove="
-          () => removeUser(value.followedBy).then(() => getCurrentUserData())
+          () =>
+            removeUser(value.followedBy).then(() => {
+              setProfile(getCurrentUserId());
+              setViewedProfile(viewedProfile._id);
+            })
         "
         :followsBack="isFollowingBack(value.followedBy)"
         :to="value.followedBy"
