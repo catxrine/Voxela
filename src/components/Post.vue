@@ -32,14 +32,14 @@ export default {
 };
 </script>
 <template>
-  <div class="flex justify-center relative w-full">
+  <div class="flex justify-center mx-6 max-w-[600px] relative w-full mb-8">
     <div
-      class="relative w-[600px] min-w-[400px] grid grid-cols-1 gap-4 p-4 mb-8 border rounded-lg bg-white shadow-lg"
+      class="relative w-full grid grid-cols-1 gap-4 p-4 border rounded-lg bg-white shadow-lg"
     >
       <div class="relative flex gap-4">
         <img
-          src="https://icons.iconarchive.com/icons/diversity-avatars/avatars/256/charlie-chaplin-icon.png"
-          class="relative rounded-lg -top-8 -mb-4 bg-white border h-20 w-20"
+          src="/astronaut (2).png"
+          class="relative rounded-lg -top-8 p-1 -mb-4 bg-white border h-16 w-16"
         />
         <div class="flex flex-col w-full">
           <div class="flex flex-row justify-between">

@@ -9,8 +9,8 @@ export default {
   >
     <router-link :to="`/profile/${to}`" class="flex items-center">
       <img
-        class="rounded-full h-10 w-10 bg-gray-500"
-        src="https://icons.iconarchive.com/icons/diversity-avatars/avatars/256/charlie-chaplin-icon.png"
+        class="rounded-full p-1 h-11 w-11 bg-blue-950"
+        src="/astronaut (2).png"
       />
       <div class="ml-2 flex flex-col">
         <div class="leading-snug text-sm text-gray-900 font-bold">

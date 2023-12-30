@@ -5,7 +5,7 @@ export default {
 </script>
 <template>
   <a
-    class="flex h-20 w-40 flex-col items-center justify-center rounded-md border border-dashed transition-colors duration-100 ease-in-out border-gray-400/80"
+    class="flex md:h-20 h-20 w-24 md:w-40 md:p-0 p-2 flex-col items-center justify-center rounded-md border border-dashed transition-colors duration-100 ease-in-out border-gray-400/80"
   >
     <div class="flex flex-row gap-2 items-center justify-center text-gray-600">
       <span class="material-symbols-outlined">{{ icon }} </span>

@@ -25,8 +25,12 @@ export default {
 </script>
 
 <template>
-  <div class="h-full overflow-hidden md:overflow-auto flex flex-col">
-    <div class="mt-10" v-for="value in posts" :key="value._id">
+  <div class="h-full overflow-auto flex flex-col">
+    <div
+      class="mt-10 flex justify-center"
+      v-for="value in posts"
+      :key="value._id"
+    >
       <Post
         :refetch="refetch"
         :author="value.author"

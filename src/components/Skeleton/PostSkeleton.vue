@@ -1,6 +1,6 @@
 <template>
   <div
-    class="relative w-[600px] grid grid-cols-1 gap-4 p-4 mb-8 border rounded-lg bg-white shadow-sm"
+    class="relative w-[600px] mx-3 grid grid-cols-1 gap-4 p-4 mb-8 border rounded-lg bg-white shadow-sm"
   >
     <div class="flex space-x-4">
       <div class="rounded-full bg-gray-300 h-12 w-12"></div>
