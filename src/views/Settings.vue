@@ -52,20 +52,20 @@ export default {
     <div class="flex flex-wrap -mx-3 mb-6">
       <div class="w-full px-3">
         <label class="label">Nickname</label>
-        <input class="input-primary" v-model="usernameValue" />
+        <input class="input-tertiary" v-model="usernameValue" />
       </div>
     </div>
     <div class="flex flex-wrap -mx-3 mb-6">
       <div class="w-full px-3">
         <label class="label">E-mail</label>
-        <input class="input-primary" type="email" v-model="emailValue" />
+        <input class="input-tertiary" type="email" v-model="emailValue" />
       </div>
     </div>
     <div class="flex flex-wrap -mx-3 mb-6">
       <div class="w-full px-3">
         <aside class="rounded-lg border-2 border-slate-600 p-4">
           <h2 class="font-os mb-1 text-lg font-bold">Tags</h2>
-          <input type="text" class="input-primary" v-model="currentTag" />
+          <input type="text" class="input-tertiary" v-model="currentTag" />
 
           <ul class="flex gap-2 items-start flex-wrap mt-4">
             <div v-for="value in currentUser?.tags">
