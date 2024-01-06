@@ -48,6 +48,7 @@ export default {
         <form
           @submit.prevent="
             async () => {
+              console.log(email, password);
               const validate = await this.v$.$validate();
               validate && logIn({ email, password });
             }

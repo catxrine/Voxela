@@ -129,11 +129,13 @@ export default {
     <div v-if="this.userId === getCurrentUserId()">
       <PostInput
         :action="
-          () =>
-            publicPost({
+          async () =>
+            await publicPost({
               description: postData.trim(),
               username: viewedProfile?.username,
-            }).then(() => setViewedProfile(userId))
+            }).then(() => {
+              setViewedProfile(userId);
+            })
         "
       >
         <input

@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "concurrently -n BE,FE -c yellow,green \"npm run BE\" \"npm run FE\"",
     "BE": "cd api && nodemon",
-    "FE": "vite",
+    "FE": "vite --host",
     "build": "vite build",
     "preview": "vite preview"
   },

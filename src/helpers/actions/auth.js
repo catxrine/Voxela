@@ -8,6 +8,7 @@ export const logIn = (loginCredentials) => {
   }).then((data) => {
     localStorage.setItem("jwt", data.jwt);
     window.location.pathname = "/profile";
+    console.log(data);
   });
 };
 
