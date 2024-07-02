@@ -13,6 +13,7 @@ router.patch("/:id", async (req, res) => {
   const user = await UserModel.findOne({ _id: req.params.id });
   user.username = req.body.username;
   user.email = req.body.email;
+  user.accent = req.body.accent;
 
   if (req.body.tag !== null && req.body.tag.trim() !== "") {
     user.tags.push(req.body.tag);

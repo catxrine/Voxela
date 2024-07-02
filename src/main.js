@@ -6,6 +6,7 @@ import "./style.css";
 
 const app = createApp(App);
 const pinia = createPinia();
+document.body.className = "theme-red theme-light";
 
 app.use(pinia);
 app.use(router);

@@ -16,7 +16,7 @@ const store = useUserStore();
 const showEditInput = ref(false);
 const newDescription = ref(props.post.description);
 const postLikes = ref(props.post.likes);
-console.log(props.post);
+
 watch(
   () => props.post.likes,
   (like) => {
@@ -33,7 +33,7 @@ watch(
       <div class="relative flex gap-4">
         <img
           src="/finn.jpeg"
-          class="relative rounded-lg -top-8 p-1 -mb-4 bg-white border h-16 w-16"
+          class="relative rounded-lg -top-8 p-1 -mb-4 bg-primary-300 border h-16 w-16"
         />
         <div class="flex flex-col w-full">
           <div class="flex flex-row justify-between">

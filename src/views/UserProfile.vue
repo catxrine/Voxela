@@ -28,7 +28,6 @@ const followed = () => {
 onMounted(() => {
   store.setViewedProfile(state.userId);
 });
-
 watch(
   () => route.params.id,
   (newId) => {
@@ -39,7 +38,7 @@ watch(
 </script>
 
 <template>
-  <div class="grid">
+  <div :class="`grid theme-${store.viewedProfile?.accent}`">
     <div
       class="flex md:flex-row flex-col md:justify-normal md:items-start justify-center items-center rounded-lg border border-gray-200/80 bg-white py-6 md:px-6 h-full"
     >
@@ -139,7 +138,7 @@ watch(
     </div>
     <div v-else class="mt-14">
       <div
-        class="flex justify-center"
+        :class="`flex justify-center theme-${store.viewedProfile?.accent}`"
         v-for="value in store.viewedProfile?.posts"
         :key="value._id"
       >

@@ -27,6 +27,11 @@ const userSchema = new mongoose.Schema(
       type: Array,
       required: false,
     },
+    accent: {
+      type: String,
+      required: true,
+      default: "blue",
+    },
   },
   { timestamps: true }
 );
