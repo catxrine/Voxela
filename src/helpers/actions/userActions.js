@@ -19,6 +19,7 @@ export const editProfile = (username, email, tag) => {
 };
 
 export const addUser = (id) => {
+  console.log(id);
   return fetchData({
     url: "/follow/add",
     method: "POST",
@@ -36,5 +37,13 @@ export const removeUser = (id) => {
     body: {
       id,
     },
+  });
+};
+
+export const searchForUsers = (param) => {
+  return fetchData({
+    url: "/user/all/" + param || "",
+    method: "GET",
+    auth: localStorage.getItem("jwt"),
   });
 };

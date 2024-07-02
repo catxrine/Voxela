@@ -1,7 +1,5 @@
-<script>
-export default {
-  props: ["action"],
-};
+<script setup>
+defineProps({ action: Function });
 </script>
 
 <template>

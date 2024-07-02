@@ -1,4 +1,5 @@
 import { fetchData } from "../fetchData";
+import { getCurrentUserId } from "../utils";
 
 export const getAllPosts = () => {
   return fetchData({
@@ -31,7 +32,15 @@ export const publicPost = (data) => {
     auth: localStorage.getItem("jwt"),
     body: {
       description: data.description,
-      username: data.username,
     },
+  });
+};
+
+export const likePost = (postId) => {
+  return fetchData({
+    url: `/post/likes/${postId}`,
+    method: "PATCH",
+    auth: localStorage.getItem("jwt"),
+    body: { id: getCurrentUserId() },
   });
 };

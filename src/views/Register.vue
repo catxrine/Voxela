@@ -1,33 +1,32 @@
-<script>
-import FormInput from "../components/FormInput.vue";
-import { registerUser } from "../helpers/actions/auth";
-import { APP_SLOGAN } from "../constants/constants";
+<script setup>
+import { ref, computed, reactive } from "vue";
 import { useVuelidate } from "@vuelidate/core";
+import FormInput from "../components/FormInput.vue";
 import { required, email, minLength, maxLength } from "@vuelidate/validators";
 
-export default {
-  setup() {
-    return { v$: useVuelidate() };
-  },
-  data() {
-    return {
-      username: "",
-      email: "",
-      password: "",
-      slogan: APP_SLOGAN,
-    };
-  },
-  validations() {
-    return {
-      username: { required, minLength: minLength(3), maxLength: maxLength(10) },
-      email: { required },
-      password: { required, minLength: minLength(6), maxLength: maxLength(16) },
-    };
-  },
-  methods: {
-    registerUser,
-  },
-  components: { FormInput },
+import { APP_SLOGAN } from "../constants/constants";
+import { registerUser } from "../helpers/actions/auth";
+
+const slogan = ref(APP_SLOGAN);
+const state = reactive({
+  username: "",
+  email: "",
+  password: "",
+});
+
+const validations = computed(() => ({
+  username: { required, minLength: minLength(3), maxLength: maxLength(10) },
+  email: { required, email },
+  password: { required, minLength: minLength(6), maxLength: maxLength(16) },
+}));
+
+const v$ = useVuelidate(validations, state);
+
+const handleSubmit = async () => {
+  const isValid = await v$.value.$validate();
+  if (isValid) {
+    registerUser(state);
+  }
 };
 </script>
 
@@ -44,67 +43,51 @@ export default {
         {{ slogan }}
       </div>
 
-      <div class="mt-8">
-        <form
-          @submit.prevent="
-            async () => {
-              const validate = await this.v$.$validate();
-              validate &&
-                registerUser({
-                  username: username,
-                  email: email,
-                  password: password,
-                });
-            }
-          "
+      <form class="mt-8" @submit.prevent="handleSubmit">
+        <FormInput
+          icon="fas fa-user"
+          :error="v$.username.$errors"
+          label="Username"
         >
-          <FormInput
-            icon="fas fa-user"
-            :error="v$.username.$errors"
-            label="Username"
-          >
-            <input
-              type="text"
-              class="input-primary"
-              placeholder="Enter your username"
-              v-model="username"
-            />
-          </FormInput>
-          <FormInput
-            icon="fas fa-at"
-            :error="v$.email.$errors"
-            label="E-Mail Address"
-          >
-            <input
-              type="text"
-              class="input-primary"
-              placeholder="Email"
-              v-model="email"
-            />
-          </FormInput>
-          <FormInput
-            icon="fas fa-lock"
-            :error="v$.password.$errors"
-            label="Password"
-          >
-            <input
-              type="password"
-              class="input-primary"
-              placeholder="●●●●●●●●●"
-              v-model="password"
-            />
-          </FormInput>
-          <button type="submit" class="btn-primary">Register</button>
-        </form>
-      </div>
+          <input
+            type="text"
+            class="input-primary"
+            placeholder="Enter your username"
+            v-model="state.username"
+          />
+        </FormInput>
+        <FormInput
+          icon="fas fa-at"
+          :error="v$.email.$errors"
+          label="E-Mail Address"
+        >
+          <input
+            type="text"
+            class="input-primary"
+            placeholder="Email"
+            v-model="state.email"
+          />
+        </FormInput>
+        <FormInput
+          icon="fas fa-lock"
+          :error="v$.password.$errors"
+          label="Password"
+        >
+          <input
+            type="password"
+            class="input-primary"
+            placeholder="●●●●●●●●●"
+            v-model="state.password"
+          />
+        </FormInput>
+        <button type="submit" class="btn-primary">Register</button>
+      </form>
     </div>
-    <div class="flex justify-center items-center mt-6">
-      <p
-        class="inline-flex ml-2 items-center text-gray-700 font-medium text-xs text-center"
-      >
-        Already have an account?
-        <router-link to="/" class="link"> Login </router-link>
-      </p>
-    </div>
+    <p
+      class="inline-flex ml-2 items-center text-gray-700 font-medium mt-6 text-xs text-center"
+    >
+      Already have an account?
+      <router-link to="/" class="link"> Login </router-link>
+    </p>
   </div>
 </template>

@@ -27,10 +27,6 @@ const userSchema = new mongoose.Schema(
       type: Array,
       required: false,
     },
-    posts: {
-      type: Array,
-      required: false,
-    },
   },
   { timestamps: true }
 );

@@ -1,10 +1,5 @@
-<script>
+<script setup>
 import { logOut } from "../helpers/actions/auth";
-export default {
-  methods: {
-    logOut,
-  },
-};
 </script>
 
 <template>
@@ -24,13 +19,13 @@ export default {
       <router-link to="/settings" class="fas fa-wrench nav-icon text-xl" />
 
       <router-link
-        @click="logOut()"
+        @click="logOut"
         to="/"
         class="fas fa-door-open nav-icon text-xl lg:hidden block"
       />
     </div>
     <router-link
-      @click="logOut()"
+      @click="logOut"
       to="/"
       class="fas fa-door-open lg:block hidden nav-icon text-xl"
     />

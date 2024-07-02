@@ -1,10 +1,6 @@
-<script>
+<script setup>
 import NavBar from "../components/NavBar.vue";
 import Followers from "./Followers/Followers.vue";
-
-export default {
-  components: { NavBar, Followers },
-};
 </script>
 
 <template>

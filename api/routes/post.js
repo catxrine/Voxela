@@ -1,12 +1,13 @@
 const router = require("express").Router();
 const { UserModel } = require("../models/User");
+const { PostModel } = require("../models/Post");
 const { joiValidate } = require("../utils");
 const joi = require("joi");
-const mongoose = require("mongoose");
-const ObjectId = mongoose.Types.ObjectId;
 
 router.get("/:id/all", async (req, res) => {
-  const posts = await UserModel.findOne({ _id: req.authorizedUser }, "posts");
+  const posts = await PostModel.find({ author: req.authorizedUser }).populate(
+    "author"
+  );
   res.status(200).json(posts);
 });
 
@@ -17,18 +18,12 @@ router.post(
     username: joi.string().trim(true),
   }),
   async (req, res) => {
-    const posts = await UserModel.findOne({ _id: req.authorizedUser }, "posts");
-
-    posts.posts.push({
-      _id: new ObjectId(),
+    const createdPost = await PostModel.create({
       description: req.body.description,
       author: req.authorizedUser,
-      username: req.body.username,
-      createdAt: new Date(),
     });
 
-    posts.save();
-    res.status(200).json(posts);
+    res.status(200).json(createdPost);
   }
 );
 
@@ -38,46 +33,34 @@ router.patch(
     description: joi.string().trim(true),
   }),
   async (req, res) => {
-    const user = await UserModel.findOne({ _id: req.authorizedUser });
-
-    let post = user.posts.find((el) => el._id.toString() === req.params.id);
+    let post = await PostModel.findOne({ _id: req.params.id });
     post.description = req.body.description;
+    post.save();
 
-    user.posts.find((el) => {
-      if (el._id.toString() === req.params.id) {
-        el.description = req.body.description;
-      }
-    });
-    user.posts[
-      user.posts.findIndex((el) => el._id.toString() === req.params.id)
-    ] = post;
-    user.save();
-
-    return res.status(200).json(user.posts);
+    return res.status(200).json(post);
   }
 );
 
+router.patch("/likes/:id", async (req, res) => {
+  const post = await PostModel.findOne({ _id: req.params.id });
+  if (post.likes.find((el) => el === req.body.id)) {
+    post.likes = post.likes.filter((el) => el !== req.body.id);
+  } else {
+    post.likes.push(req.body.id);
+  }
+
+  post.save();
+  return res.status(200).json(post.likes);
+});
+
 router.delete("/:id", async (req, res) => {
-  const user = await UserModel.findOne({ _id: req.authorizedUser });
-
-  user.posts = user.posts.filter((el) => el._id.toString() !== req.params.id);
-
-  user.save();
-
-  return res.status(200).json(user.posts);
+  const posts = await PostModel.deleteOne({ _id: req.params.id });
+  return res.status(200).json(posts);
 });
 
 router.get("/all", async (req, res) => {
-  const users = await UserModel.find({});
-  let posts = [];
+  let posts = await PostModel.find({}).populate("author");
 
-  users.map((user) => {
-    user.posts.map((el) => {
-      if (!Array.isArray(el)) {
-        posts.push(el);
-      }
-    });
-  });
   res.status(200).json(posts);
 });
 

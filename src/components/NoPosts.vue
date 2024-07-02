@@ -1,8 +1,5 @@
-<script>
+<script setup>
 import PostSkeleton from "./Skeleton/PostSkeleton.vue";
-export default {
-  components: { PostSkeleton },
-};
 </script>
 
 <template>

@@ -1,27 +1,18 @@
-<script>
+<script setup>
+import { ref, onMounted } from "vue";
 import Post from "../components/Post.vue";
 import { getAllPosts } from "../helpers/actions/postActions";
 
-export default {
-  data() {
-    return {
-      posts: "",
-    };
-  },
+const posts = ref("");
 
-  methods: {
-    getAllPosts,
-    refetch() {
-      this.getAllPosts().then((data) => {
-        this.posts = data;
-      });
-    },
-  },
-  mounted() {
-    this.refetch();
-  },
-  components: { Post },
+const refetch = async () => {
+  const data = await getAllPosts();
+  posts.value = data;
 };
+
+onMounted(() => {
+  refetch();
+});
 </script>
 
 <template>
@@ -31,14 +22,7 @@ export default {
       v-for="value in posts"
       :key="value._id"
     >
-      <Post
-        :refetch="refetch"
-        :author="value.author"
-        :description="value.description"
-        :date="value.createdAt"
-        :_id="value._id"
-        :username="value.username"
-      />
+      <Post :refetch="refetch" :post="value" />
     </div>
   </div>
 </template>

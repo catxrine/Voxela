@@ -1,7 +1,5 @@
-<script>
-export default {
-  props: ["title"],
-};
+<script setup>
+defineProps({ title: String });
 </script>
 <template>
   <div class="tag-primary">

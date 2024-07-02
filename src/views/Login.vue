@@ -1,31 +1,31 @@
-<script>
-import FormInput from "../components/FormInput.vue";
-import { logIn } from "../helpers/actions/auth";
-import { APP_SLOGAN } from "../constants/constants.js";
+<script setup>
+import { ref, reactive, computed } from "vue";
+
 import { useVuelidate } from "@vuelidate/core";
 import { required, email, minLength, maxLength } from "@vuelidate/validators";
 
-export default {
-  setup() {
-    return { v$: useVuelidate() };
-  },
-  data() {
-    return {
-      email: "",
-      password: "",
-      slogan: APP_SLOGAN,
-    };
-  },
-  validations() {
-    return {
-      email: { required },
-      password: { required, minLength: minLength(6), maxLength: maxLength(16) },
-    };
-  },
-  methods: {
-    logIn,
-  },
-  components: { FormInput },
+import { logIn } from "../helpers/actions/auth";
+import { APP_SLOGAN } from "../constants/constants.js";
+
+import FormInput from "../components/FormInput.vue";
+
+const slogan = ref(APP_SLOGAN);
+const state = reactive({
+  email: "",
+  password: "",
+});
+
+const validations = computed(() => ({
+  email: { required, email },
+  password: { required, minLength: minLength(6), maxLength: maxLength(16) },
+}));
+const v$ = useVuelidate(validations, state);
+
+const handleSubmit = async () => {
+  const isValid = await v$.value.$validate();
+  if (isValid) {
+    logIn(state);
+  }
 };
 </script>
 
@@ -45,15 +45,7 @@ export default {
       </div>
 
       <div class="mt-8">
-        <form
-          @submit.prevent="
-            async () => {
-              console.log(email, password);
-              const validate = await this.v$.$validate();
-              validate && logIn({ email, password });
-            }
-          "
-        >
+        <form @submit.prevent="handleSubmit">
           <FormInput
             icon="fas fa-at"
             :error="v$.email.$errors"
@@ -63,7 +55,7 @@ export default {
               type="text"
               class="input-primary"
               placeholder="Email"
-              v-model="email"
+              v-model="state.email"
             />
           </FormInput>
 
@@ -76,7 +68,7 @@ export default {
               type="password"
               class="input-primary"
               placeholder="●●●●●●●●●"
-              v-model="password"
+              v-model="state.password"
             />
           </FormInput>
           <button type="submit" class="btn-primary">Login</button>

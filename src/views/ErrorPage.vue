@@ -1,7 +1,3 @@
-<script>
-export default {};
-</script>
-
 <template>
   <div
     className="text-center flex justify-center flex-col h-screen items-center"

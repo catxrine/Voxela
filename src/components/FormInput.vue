@@ -1,7 +1,9 @@
-<script>
-export default {
-  props: ["label", "icon", "error"],
-};
+<script setup>
+defineProps({
+  label: String,
+  icon: String,
+  error: Object,
+});
 </script>
 
 <template>
