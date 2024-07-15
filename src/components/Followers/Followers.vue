@@ -15,6 +15,7 @@ const isFollowingBack = (id) => {
 };
 
 onMounted(() => store.setProfile(getCurrentUserId()));
+console.log(store?.profile?.followers);
 </script>
 
 <template>

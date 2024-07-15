@@ -9,12 +9,17 @@ export const getCurrentUserData = () => {
   });
 };
 
-export const editProfile = (username, email, tag, accent) => {
+export const editProfile = (data) => {
   return fetchData({
     url: `/user/${getCurrentUserId()}`,
     method: "PATCH",
     auth: localStorage.getItem("jwt"),
-    body: { username: username, email: email, tag: tag, accent: accent },
+    body: {
+      username: data.username,
+      email: data.email,
+      tags: data.tags,
+      accent: data.accent,
+    },
   });
 };
 

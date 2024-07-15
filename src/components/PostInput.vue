@@ -18,4 +18,3 @@ defineProps({ action: Function });
     </button>
   </div>
 </template>
-<!-- hover:text-gray-700 -->

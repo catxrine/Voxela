@@ -1,7 +1,8 @@
-<script>
-export default {};
+<script setup>
+import { themes } from "./main";
 </script>
-
 <template>
-  <router-view />
+  <div :class="`theme-${themes.accent}`">
+    <router-view />
+  </div>
 </template>

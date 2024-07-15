@@ -4,7 +4,6 @@ const { UserModel } = require("../models/User");
 
 router.post("/add", async (req, res) => {
   const user = await UserModel.findOne({ _id: req.authorizedUser });
-
   user.tags.push(req.body.title);
 
   return res.status(200).json(user);

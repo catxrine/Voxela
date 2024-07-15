@@ -120,7 +120,7 @@
   --color-primary-800: theme("colors.red.800");
   --color-primary-900: theme("colors.red.900");
 }
-.theme-red {
+.theme-rose {
   --color-primary-50: theme("colors.rose.50");
   --color-primary-100: theme("colors.rose.100");
   --color-primary-200: theme("colors.rose.200");

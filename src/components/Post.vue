@@ -16,7 +16,6 @@ const store = useUserStore();
 const showEditInput = ref(false);
 const newDescription = ref(props.post.description);
 const postLikes = ref(props.post.likes);
-
 watch(
   () => props.post.likes,
   (like) => {

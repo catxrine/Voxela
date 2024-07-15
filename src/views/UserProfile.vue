@@ -27,6 +27,7 @@ const followed = () => {
 
 onMounted(() => {
   store.setViewedProfile(state.userId);
+  localStorage.setItem("accent", store?.profile?.accent);
 });
 watch(
   () => route.params.id,
@@ -96,16 +97,19 @@ watch(
             title="Posts"
             :data="store.viewedProfile?.posts?.length"
             icon="style"
+            class="md:w-40"
           />
           <MiniCard
             title="Followers"
             :data="store.viewedProfile?.followers?.length"
             icon="group"
+            class="md:w-40"
           />
           <MiniCard
             title="Followed"
             :data="store.viewedProfile?.followed?.length"
             icon="person_check"
+            class="md:w-40"
           />
         </div>
       </div>

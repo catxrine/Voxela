@@ -23,6 +23,12 @@ defineProps({
     <button v-if="followsBack" @click="remove" class="tag-tertiary">
       Followed
     </button>
-    <button v-else @click="add" class="tag-secondary">Follow</button>
+    <button
+      v-else
+      @click="add"
+      class="tag-secondary text-blue-600 border-blue-600 bg-blue-50"
+    >
+      Follow
+    </button>
   </div>
 </template>
